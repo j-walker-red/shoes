@@ -120,7 +120,7 @@ def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
         # Actualizar barra de progreso
         progress = (i + 1) / total_images
         progress_bar.progress(progress)
-        status_text.text(f"Procesando {i + 1}/{total_images} imágenes...\nArchivo actual: {filename}")
+        status_text.text(f"Procesando {i + 1}/{total_images} imágenes...")
     
     output_zip_path = BytesIO()
     with zipfile.ZipFile(output_zip_path, 'w') as zipf:
