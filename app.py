@@ -134,14 +134,11 @@ def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
             os.remove(os.path.join(folder, file))
         os.rmdir(folder)
     
-    progress_bar.empty()
-    status_text.text("Procesamiento completado.")
-    
     return output_zip_path
 
 # Interfaz de Streamlit
-st.title("¡Hola ojos de cuquillo!")
-st.write("Redimensionamos tus imágenes de zapatos. Sube un archivo ZIP con imágenes, las proceso y te las envío en un nuevo ZIP.")
+st.title("Redimensionador 3000")
+st.write("Redimensiono tus imágenes de zapatos. Sube un archivo ZIP con imágenes, las proceso y te las envío en un nuevo ZIP.")
 
 # Agregar controles deslizantes para los márgenes
 margen_horizontal = st.slider("Margen horizontal", min_value=0, max_value=100, value=20)
@@ -149,9 +146,8 @@ margen_vertical = st.slider("Margen vertical", min_value=0, max_value=100, value
 
 uploaded_file = st.file_uploader("Sube tu archivo ZIP con imágenes", type=["zip"])
 if uploaded_file is not None:
-    st.write("Procesando tu archivo...")
     result_zip = process_images_in_zip(uploaded_file)
-    st.success("Procesamiento completado. Descarga el archivo abajo:")
+    st.success("Procesamiento completado")
     st.download_button(
         label="Descargar imágenes",
         data=result_zip,
