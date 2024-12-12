@@ -13,8 +13,6 @@ reader = easyocr.Reader(['en', 'es'])  # Idiomas: inglés y español
 # Configuración
 alto = 600
 ancho = round(350 / 220 * alto)
-margen_horizontal = 20
-margen_vertical = 20
 
 # Función para detectar si una imagen tiene texto
 # Si tiene texto, devuelve la coordenada Y inferior del bounding box. Si no, devuelve 0
@@ -130,16 +128,20 @@ def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
     return output_zip_path
 
 # Interfaz de Streamlit
-st.title("Editor de Imágenes de Zapatos")
-st.write("Sube un archivo ZIP con imágenes de zapatos, las procesamos y descárgalas en un nuevo ZIP.")
+st.title("¡Hola ojos de cuquillo!")
+st.write("Redimensionamos tus imágenes de zapatos. Sube un archivo ZIP con imágenes, las proceso y te las envío en un nuevo ZIP.")
 
-uploaded_file = st.file_uploader("Sube tu archivo ZIP", type=["zip"])
+# Agregar controles deslizantes para los márgenes
+margen_horizontal = st.slider("Margen horizontal", min_value=0, max_value=100, value=20)
+margen_vertical = st.slider("Margen vertical", min_value=0, max_value=100, value=20)
+
+uploaded_file = st.file_uploader("Sube tu archivo ZIP con imágenes", type=["zip"])
 if uploaded_file is not None:
     st.write("Procesando tu archivo...")
     result_zip = process_images_in_zip(uploaded_file)
     st.success("Procesamiento completado. Descarga el archivo abajo:")
     st.download_button(
-        label="Descargar ZIP modificado",
+        label="Descargar imágenes",
         data=result_zip,
         file_name="processed_images.zip",
         mime="application/zip"
