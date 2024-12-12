@@ -103,16 +103,25 @@ def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
     with zipfile.ZipFile(zip_file, 'r') as zip_ref:
         zip_ref.extractall(temp_input_dir)
 
-    for filename in os.listdir(temp_input_dir):
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff')):
-            input_path = os.path.join(temp_input_dir, filename)
-            output_filename = os.path.splitext(filename)[0] + ".jpg"
-            output_path = os.path.join(temp_output_dir, output_filename)
-            try:
-                resize_and_detect_shoe(input_path, output_path, target_width, target_height)
-            except Exception as e:
-                print(f"Error procesando {filename}: {e}")
-
+    image_files = [f for f in os.listdir(temp_input_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff'))]
+    total_images = len(image_files)
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    for i, filename in enumerate(image_files):
+        input_path = os.path.join(temp_input_dir, filename)
+        output_filename = os.path.splitext(filename)[0] + ".jpg"
+        output_path = os.path.join(temp_output_dir, output_filename)
+        try:
+            resize_and_detect_shoe(input_path, output_path, target_width, target_height)
+        except Exception as e:
+            print(f"Error procesando {filename}: {e}")
+        
+        # Actualizar barra de progreso
+        progress = (i + 1) / total_images
+        progress_bar.progress(progress)
+        status_text.text(f"Procesando {i + 1}/{total_images} imágenes...\nArchivo actual: {filename}")
+    
     output_zip_path = BytesIO()
     with zipfile.ZipFile(output_zip_path, 'w') as zipf:
         for root, _, files in os.walk(temp_output_dir):
@@ -124,7 +133,10 @@ def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
         for file in os.listdir(folder):
             os.remove(os.path.join(folder, file))
         os.rmdir(folder)
-
+    
+    progress_bar.empty()
+    status_text.text("Procesamiento completado.")
+    
     return output_zip_path
 
 # Interfaz de Streamlit
