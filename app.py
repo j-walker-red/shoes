@@ -137,7 +137,7 @@ def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
     return output_zip_path
 
 # Interfaz de Streamlit
-st.title("Redimensionador 3000")
+st.title("Redimensionator 3000")
 st.write("Redimensiono tus imágenes de zapatos. Sube un archivo ZIP con imágenes, las proceso y te las envío en un nuevo ZIP.")
 
 # Agregar controles deslizantes para los márgenes
