@@ -11,6 +11,9 @@ import zipfile
 # Crear el lector de EasyOCR
 reader = easyocr.Reader(['en', 'es'])  # Idiomas: inglés y español
 
+# Configurando la herramienta unrar
+rarfile.UNRAR_TOOL = os.path.abspath("unrar") 
+
 # Configuración
 alto = 600
 ancho = round(350 / 220 * alto)
