@@ -4,3 +4,4 @@ numpy
 easyocr
 torch
 torchvision
+rarfile
