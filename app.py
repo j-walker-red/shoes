@@ -102,10 +102,10 @@ def process_images_in_zip(input_file, target_width=ancho, target_height=alto):
     os.makedirs(temp_output_dir, exist_ok=True)
 
     # Extraer el archivo (ZIP o RAR)
-    if input_file.lower().endswith('.zip'):
+    if input_file.name.lower().endswith('.zip'):
         with zipfile.ZipFile(input_file, 'r') as zf:
             zf.extractall(temp_input_dir)
-    elif input_file.lower().endswith('.rar'):
+    elif input_file.name.lower().endswith('.rar'):
         with rarfile.RarFile(input_file) as rf:
             rf.extractall(temp_input_dir)
     else:
