@@ -4,22 +4,11 @@ import easyocr
 from io import BytesIO
 import numpy as np
 import os
-import rarfile
 import streamlit as st
 import zipfile
 
 # Crear el lector de EasyOCR
 reader = easyocr.Reader(['en', 'es'])  # Idiomas: inglés y español
-
-# Configurando la herramienta unrar
-rarfile.UNRAR_TOOL = os.path.abspath("unrar") 
-
-unrar_path = os.path.abspath("unrar")
-if os.path.exists(unrar_path):
-    st.write(f"'unrar' encontrado en: {unrar_path}")
-    st.write(f"Permisos: {oct(os.stat(unrar_path).st_mode)}")
-else:
-    st.write("'unrar' no encontrado. Asegúrate de que esté subido correctamente.")
 
 # Configuración
 alto = 600
@@ -105,21 +94,14 @@ def resize_and_detect_shoe(image_path, output_path, target_width=ancho, target_h
     cv2.imwrite(output_path, canvas)
 
 # Procesa las imágenes en el fichero comprimido
-def process_images_in_zip(input_file, target_width=ancho, target_height=alto):
+def process_images_in_zip(zip_file, target_width=ancho, target_height=alto):
     temp_input_dir = "temp_input_images"
     temp_output_dir = "temp_output_images"
     os.makedirs(temp_input_dir, exist_ok=True)
     os.makedirs(temp_output_dir, exist_ok=True)
 
-    # Extraer el archivo (ZIP o RAR)
-    if input_file.name.lower().endswith('.zip'):
-        with zipfile.ZipFile(input_file, 'r') as zf:
-            zf.extractall(temp_input_dir)
-    elif input_file.name.lower().endswith('.rar'):
-        with rarfile.RarFile(input_file) as rf:
-            rf.extractall(temp_input_dir)
-    else:
-        raise ValueError("Formato de archivo no soportado. Solo se admiten ZIP y RAR.")
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        zip_ref.extractall(temp_input_dir)
 
     image_files = [f for f in os.listdir(temp_input_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff'))]
     total_images = len(image_files)
@@ -156,13 +138,13 @@ def process_images_in_zip(input_file, target_width=ancho, target_height=alto):
 
 # Interfaz de Streamlit
 st.title("Redimensionator 3000")
-st.write("Redimensiono tus imágenes de zapatos. Sube un archivo ZIP o RAR con imágenes, las proceso y te las envío en un nuevo ZIP.")
+st.write("Redimensiono tus imágenes de zapatos. Sube un archivo ZIP con imágenes, las proceso y te las envío en un nuevo ZIP.")
 
 # Agregar controles deslizantes para los márgenes
 margen_horizontal = st.slider("Margen horizontal", min_value=0, max_value=100, value=20)
 margen_vertical = st.slider("Margen vertical", min_value=0, max_value=100, value=20)
 
-uploaded_file = st.file_uploader("Sube tu archivo ZIP o RAR con imágenes", type=["zip", "rar"])
+uploaded_file = st.file_uploader("Sube tu archivo ZIP con imágenes", type=["zip"])
 if uploaded_file is not None:
     result_zip = process_images_in_zip(uploaded_file)
     st.success("Procesamiento completado")
