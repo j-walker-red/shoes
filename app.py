@@ -14,6 +14,13 @@ reader = easyocr.Reader(['en', 'es'])  # Idiomas: inglés y español
 # Configurando la herramienta unrar
 rarfile.UNRAR_TOOL = os.path.abspath("unrar") 
 
+unrar_path = os.path.abspath("unrar")
+if os.path.exists(unrar_path):
+    st.write(f"'unrar' encontrado en: {unrar_path}")
+    st.write(f"Permisos: {oct(os.stat(unrar_path).st_mode)}")
+else:
+    st.write("'unrar' no encontrado. Asegúrate de que esté subido correctamente.")
+
 # Configuración
 alto = 600
 ancho = round(350 / 220 * alto)
